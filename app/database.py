@@ -1,20 +1,17 @@
+import os
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-# SQLite database URL
-DATABASE_URL = "sqlite:///./url_shortener.db"
+# Adresse lue depuis l'environnement (SQLite par défaut en local)
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./url_shortener.db")
 
-# Create the database engine
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+# L'option check_same_thread n'existe que pour SQLite
+connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
 
-# Create a session maker
+engine = create_engine(DATABASE_URL, connect_args=connect_args, pool_pre_ping=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Base class for ORM models
 Base = declarative_base()
 
-# Dependency to get DB session
 def get_db():
     db = SessionLocal()
     try:

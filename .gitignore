@@ -1,0 +1,39 @@
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Base de données locale
+*.db
+*.sqlite3
+
+# Logs
+logs/
+*.log
+
+# Rapports de scan (à garder en capture, pas dans Git)
+bandit-report.*
+trivy-report.*
+zap-report.*
+
+# IDE et système
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Clés et certificats
+*.pem
+*.key
+kubeconfig
+*.kubeconfig
+
