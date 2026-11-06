@@ -77,7 +77,7 @@ jobs:
         env:
            PYTHONPATH: ${{ github.workspace }} 
         run: |
-          pytest -m pytest  -v --tb=short
+          pytest  -v --tb=short
 
 
   # ==========================================
