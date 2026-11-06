@@ -74,8 +74,10 @@ jobs:
 
       # 6. Automated tests
       - name: Run Pytest
+        env:
+           PYTHONPATH: ${{ github.workspace }} 
         run: |
-          pytest -v --tb=short
+          pytest -m pytest  -v --tb=short
 
 
   # ==========================================
