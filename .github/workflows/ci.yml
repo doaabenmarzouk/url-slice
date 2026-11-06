@@ -75,9 +75,9 @@ jobs:
       # 6. Automated tests
       - name: Run Pytest
         env:
-           PYTHONPATH: ${{ github.workspace }} 
+          PYTHONPATH: ${{ github.workspace }}
         run: |
-          pytest  -v --tb=short
+          pytest -v --tb=short
 
 
   # ==========================================
@@ -134,4 +134,4 @@ jobs:
           severity: HIGH,CRITICAL
           ignore-unfixed: true
           exit-code: '1'
-          skip-setup-trivy: true
+          vuln-type: os,library
