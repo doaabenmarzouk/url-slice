@@ -37,3 +37,6 @@ Thumbs.db
 kubeconfig
 *.kubeconfig
 
+venv/
+venv-fix/
+venv-check/
