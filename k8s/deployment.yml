@@ -30,6 +30,12 @@ spec:
       containers:
         - name: url-slice-container
           image: IMAGE_PLACEHOLDER
+          imagePullPolicy: Always
+
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
 
           resources:
             requests:
@@ -39,22 +45,17 @@ spec:
               memory: "128Mi"
               cpu: "500m"
 
-          ports:
-            - containerPort: 8000
-              name: http
-
           startupProbe:
             httpGet:
               path: /healthz
-              port: 8000
-            failureThreshold: 30
+              port: http
             periodSeconds: 10
+            failureThreshold: 30
 
           livenessProbe:
             httpGet:
               path: /healthz
-              port: 8000
-            initialDelaySeconds: 10
+              port: http
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 3
@@ -62,11 +63,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /ready
-              port: 8000
+              port: http
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 3
-
-
-
-

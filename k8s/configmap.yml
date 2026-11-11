@@ -1,11 +1,13 @@
+
 apiVersion: v1
 kind: ConfigMap
+
 metadata:
-  name: url-slice
+  name: url-slice-config
   namespace: url-slice
+
 data:
-  APP_NAME: 'url-slice'
-  APP_ENV: 'development'
-  PORT: '8000' 
-  log_Level: INFO
-  
+  APP_NAME: "url-slice"
+  APP_ENV: "development"
+  PORT: "8000"
+  LOG_LEVEL: "INFO"
