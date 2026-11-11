@@ -1,4 +1,4 @@
-# https://github.com/docker/build-push-action
+
 name: CD - Publish image
 
 on:
@@ -44,6 +44,7 @@ jobs:
     needs: publish
     runs-on: [self-hosted, linux, k3s]
     timeout-minutes: 20
+
     env:
       KUBECONFIG: /home/doua/.kube/config
 
@@ -64,9 +65,9 @@ jobs:
 
       - name: Verify deployment
         run: |
-          kubectl rollout status deployment/url-slice -n url-slice --timeout=300s
+          kubectl rollout status deployment/url-slice-deployment -n url-slice --timeout=300s
 
       - name: Rollback on failure
         if: failure()
         run: |
-          kubectl rollout undo deployment/url-slice -n url-slice
+          kubectl rollout undo deployment/url-slice-deployment -n url-slice
