@@ -1,4 +1,3 @@
-
 # https://github.com/docker/build-push-action
 name: CD - Publish image
 
@@ -19,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout code
@@ -39,3 +38,35 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/url-slice:${{ github.run_number }}
             ${{ secrets.DOCKERHUB_USERNAME }}/url-slice:${{ github.sha }}
+
+  deploy:
+    name: Deploy to k3s
+    needs: publish
+    runs-on: [self-hosted, linux, k3s]
+    timeout-minutes: 20
+    env:
+      KUBECONFIG: /home/NOM_UTILISATEUR/.kube/config
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        run: |
+          sed -i "s|IMAGE_PLACEHOLDER|${{ secrets.DOCKERHUB_USERNAME }}/url-slice:${{ github.run_number }}|" k8s/deployment.yml
+
+      - name: Deploy
+        run: |
+          kubectl apply -f k8s/namespace.yml
+          kubectl apply -f k8s/configmap.yml
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
+
+      - name: Verify deployment
+        run: |
+          kubectl rollout status deployment/url-slice -n url-slice --timeout=300s
+
+      - name: Rollback on failure
+        if: failure()
+        run: |
+          kubectl rollout undo deployment/url-slice -n url-slice

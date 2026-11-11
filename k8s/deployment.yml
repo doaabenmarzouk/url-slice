@@ -1,0 +1,72 @@
+
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: url-slice-deployment
+  namespace: url-slice
+  labels:
+    app.kubernetes.io/name: url-slice
+
+spec:
+  replicas: 2
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  selector:
+    matchLabels:
+      app: url-slice
+
+  template:
+    metadata:
+      labels:
+        app: url-slice
+
+    spec:
+      containers:
+        - name: url-slice-container
+          image: IMAGE_PLACEHOLDER
+
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+
+          ports:
+            - containerPort: 8000
+              name: http
+
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            failureThreshold: 30
+            periodSeconds: 10
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8000
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+
+
+
+
