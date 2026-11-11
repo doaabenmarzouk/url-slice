@@ -45,7 +45,7 @@ jobs:
     runs-on: [self-hosted, linux, k3s]
     timeout-minutes: 20
     env:
-      KUBECONFIG: /home/NOM_UTILISATEUR/.kube/config
+      KUBECONFIG: /home/doua/.kube/config
 
     steps:
       - name: Checkout code
