@@ -77,4 +77,5 @@ spec:
 
       volumes:
         - name: data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: url-slice-data

@@ -60,6 +60,7 @@ jobs:
         run: |
           kubectl apply -f k8s/namespace.yml
           kubectl apply -f k8s/configmap.yml
+          kubectl apply -f k8s/pvc.yml
           kubectl apply -f k8s/deployment.yml
           kubectl apply -f k8s/service.yml
 
@@ -67,7 +68,13 @@ jobs:
         run: |
           kubectl rollout status deployment/url-slice-deployment -n url-slice --timeout=300s
 
-      - name: Rollback on failure
+      - name: Debug on failure
         if: failure()
         run: |
-          kubectl rollout undo deployment/url-slice-deployment -n url-slice
+          kubectl get pods,pvc -n url-slice
+          kubectl describe pods -n url-slice -l app=url-slice | tail -40
+          kubectl logs -n url-slice -l app=url-slice --tail=50 || true
+
+      - name: Rollback on failure
+        if: failure()
+        run: kubectl rollout undo deployment/url-slice-deployment -n url-slice || true
