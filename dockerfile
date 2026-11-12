@@ -18,7 +18,9 @@ COPY app/ ./app/
 # Correctif setuptools/wheel (copies internes vulnérables), inutiles à l'exécution
 RUN pip uninstall -y setuptools wheel
 
-RUN useradd -m appuser && mkdir -p logs && chown appuser logs
+RUN useradd -m -u 1000 appuser \
+ && mkdir -p /app/logs /data \
+ && chown appuser:appuser /app/logs /data
 USER appuser
 EXPOSE 8000
 CMD ["sh", "-c", "python -c 'from app import models, database; database.Base.metadata.create_all(database.engine)' && exec uvicorn app.main:app --host 0.0.0.0 --port 8000"]
