@@ -6,9 +6,48 @@ services:
       - "8000:8000"
     environment:
       DATABASE_URL: sqlite:////data/urls.db
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+      OTEL_SERVICE_NAME: url-slice
     volumes:
       - sqlitedata:/data
+    depends_on:
+      - jaeger
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: prometheus
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - urlshort
+    restart: unless-stopped
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.58
+    container_name: jaeger
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "16686:16686"   # interface web
+      - "4318:4318"     # réception des traces (OTLP HTTP)
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.1.0
+    container_name: grafana
+    volumes:
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      - grafanadata:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+      - jaeger
     restart: unless-stopped
 
 volumes:
   sqlitedata:
+  grafanadata:
