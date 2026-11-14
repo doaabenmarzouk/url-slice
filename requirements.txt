@@ -1,4 +1,3 @@
-
 annotated-types==0.7.0
 anyio==4.14.2
 certifi==2026.10.18
@@ -18,11 +17,10 @@ pytest==8.3.4
 pytest-asyncio==0.25.0
 sniffio==1.3.1
 SQLAlchemy==2.0.36
-starlette==1.7.0
 typing-inspection==0.4.5
 typing_extensions==4.16.0
 uvicorn==0.34.0
-psycopg2-binary==2.9.10
-prometheus-fastapi-instrumentator==7.0.0
-opentelemetry-sdk==1.27.0
-opentelemetry-instrumentation-fastapi==0.48b0
+prometheus-fastapi-instrumentator
+opentelemetry-sdk
+opentelemetry-instrumentation-fastapi
+opentelemetry-exporter-otlp-proto-http
