@@ -23,3 +23,6 @@ typing-inspection==0.4.5
 typing_extensions==4.16.0
 uvicorn==0.34.0
 psycopg2-binary==2.9.10
+prometheus-fastapi-instrumentator==7.0.0
+opentelemetry-sdk==1.27.0
+opentelemetry-instrumentation-fastapi==0.48b0

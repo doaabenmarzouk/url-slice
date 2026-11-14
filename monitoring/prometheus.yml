@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: url-slice
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["urlshort:8000"]
+      
+     
+
+        
